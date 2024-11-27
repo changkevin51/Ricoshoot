@@ -1,6 +1,5 @@
 import pygame
 import math
-from enemy import Enemy
 import pygame
 import random
 from ball import Ball

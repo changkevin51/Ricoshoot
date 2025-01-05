@@ -1,13 +1,10 @@
-import pygame
 import sys
 import time
 import random
 import math
 import os
-from Buttons import Button
-from ball import Ball
-from player import Player, Enemy
-
+import asyncio
+import pygame
 from pygame.locals import (
     K_a,
     K_w,
@@ -23,6 +20,9 @@ from pygame.locals import (
     K_3,
     K_SPACE,
 )
+from Buttons import Button
+from ball import Ball
+from player import Player, Enemy
 
 pygame.init()
 
@@ -34,12 +34,12 @@ LARGER_BULLETS = False
 FLAMETHROWER = False
 
 
-death_sound = pygame.mixer.Sound('sounds/death.wav')
-shoot_sound = pygame.mixer.Sound('sounds/shoot.wav')
-shot_sound = pygame.mixer.Sound('sounds/sounds_hurt.mp3')
-win_sound = pygame.mixer.Sound('sounds/win_music.wav')
-menu_sound = pygame.mixer.Sound('sounds/background.mp3')
-main_sound = pygame.mixer.Sound('sounds/background.mp3')
+death_sound = pygame.mixer.Sound('sounds/death.ogg')
+shoot_sound = pygame.mixer.Sound('sounds/shoot.ogg')
+shot_sound = pygame.mixer.Sound('sounds/sounds_hurt.ogg')
+win_sound = pygame.mixer.Sound('sounds/win_music.ogg')
+menu_sound = pygame.mixer.Sound('sounds/background.ogg')
+main_sound = pygame.mixer.Sound('sounds/background.ogg')
 
 main_sound.set_volume(0.4)
 
@@ -117,12 +117,12 @@ BG = pygame.transform.scale(BG, (SCREEN_WIDTH, SCREEN_HEIGHT))  # Scale the imag
 pygame.display.set_caption("Menu")
 clock = pygame.time.Clock()
 
-gun_img = pygame.image.load('images/guns/gun-basic.png').convert_alpha()
+gun_img = pygame.image.load('images/Guns/gun-basic.png').convert_alpha()
 
-projectile_img = pygame.image.load('images/ballz/projectile.png').convert()
+projectile_img = pygame.image.load('images/Ballz/projectile.png').convert()
 projectile_img.set_colorkey((0, 0, 0))
 
-enemy_projectile_img = pygame.image.load('images/ballz/enemy_projectile.png').convert()
+enemy_projectile_img = pygame.image.load('images/Ballz/enemy_projectile.png').convert()
 enemy_projectile_img.set_colorkey((0, 0, 0))
 
 
@@ -152,7 +152,7 @@ def main_menu():
     while True:
         screen.blit(BG, (0, 0))
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-        MENU_TEXT = get_font(80).render("MAIN MENU", True, "#b68f40")
+        MENU_TEXT = get_font(80).render("RICOSHOOT", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGHT//6))
         SCREEN.blit(MENU_TEXT, MENU_RECT)
         global COINS
@@ -575,6 +575,8 @@ def map1():
                     if enemy.health <= 0:
                         enemies_defeated += 1
                         player.health += 5
+                        if player.health > 100:
+                            player.health = 100
                         enemies.remove(enemy)
                         del enemy
                 else:
@@ -779,7 +781,7 @@ def flamethrower():
 
         if COINS < 1000:
             FLAME_TEXT = get_font(40).render("INSUFFICIENT FUNDS", True, "Black")
-            FLAME_RECT = LARGER_TEXT.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGHT//6))
+            FLAME_RECT = FLAME_TEXT.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGHT//6))
             SCREEN.blit(FLAME_TEXT, FLAME_RECT)
             COINS_TEXT = get_font(25).render(f"COINS REQUIRED: {1000-COINS}🔶", True, "Black")
             COINS_RECT = COINS_TEXT.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGHT//2))
@@ -1031,12 +1033,6 @@ def freeze():
 
         pygame.display.update()
 
-    
 
 
-######## Tilemap ########
-
-
-
-#######################
 main_menu()
